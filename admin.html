@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kahoot! Clone - Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <div id="quizzes-list"></div>
+    <form id="create-quiz-form">
+        <input type="text" id="quiz-title" placeholder="Quiz Title" required>
+        <textarea id="quiz-description" placeholder="Quiz Description"></textarea>
+        <button type="submit">Create Quiz</button>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+</body>
+</html>
