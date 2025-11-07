@@ -8,7 +8,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 </head>
 <body>
-    <div id="game-container">
+    <div id="loading-indicator">
+        <p>Connecting to Supabase and fetching questions...</p>
+    </div>
+    <div id="error-container" style="display: none;">
+        <p>Could not fetch questions. Please try again later.</p>
+    </div>
+    <div id="game-container" style="display: none;">
         <div id="timer"></div>
         <h2 id="question-text"></h2>
         <div id="options-container"></div>

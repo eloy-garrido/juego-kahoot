@@ -76,3 +76,13 @@ button:hover {
 button:active {
     transform: scale(0.95);
 }
+
+#loading-indicator, #error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 1.5rem;
+    color: white;
+    text-align: center;
+}

@@ -3,13 +3,11 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // Sound setup
-/*
 const sounds = {
     background: new Howl({ src: ['audio/background.mp3'], loop: true, volume: 0.3 }),
     correct: new Howl({ src: ['audio/correct.mp3'] }),
     incorrect: new Howl({ src: ['audio/incorrect.mp3'] })
 };
-*/
 
 document.addEventListener('DOMContentLoaded', () => {
     const path = window.location.pathname;
@@ -50,6 +48,8 @@ async function handlePlayPage() {
     }
 
     const gameContainer = document.getElementById('game-container');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const errorContainer = document.getElementById('error-container');
     const timerEl = document.getElementById('timer');
     const questionTextEl = document.getElementById('question-text');
     const optionsContainer = document.getElementById('options-container');
@@ -60,13 +60,22 @@ async function handlePlayPage() {
     let timer;
 
     const fetchQuestions = async () => {
-        const { data: quiz, error: quizError } = await supabase.from('quizzes').select('id').eq('title', 'Angular Basics').single();
-        if (quizError) return;
+        try {
+            const { data: quiz, error: quizError } = await supabase.from('quizzes').select('id').eq('title', 'Angular Basics').single();
+            if (quizError) throw quizError;
 
-        const { data, error } = await supabase.from('questions').select('*, options(*)').eq('quiz_id', quiz.id);
-        if (error) return;
-        questions = data;
-        showNextQuestion();
+            const { data, error } = await supabase.from('questions').select('*, options(*)').eq('quiz_id', quiz.id);
+            if (error) throw error;
+
+            questions = data;
+            loadingIndicator.style.display = 'none';
+            gameContainer.style.display = 'block';
+            showNextQuestion();
+        } catch (error) {
+            console.error('Error fetching questions:', error);
+            loadingIndicator.style.display = 'none';
+            errorContainer.style.display = 'block';
+        }
     };
 
     const showNextQuestion = () => {
