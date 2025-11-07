@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kahoot! Clone - Play</title>
+    <title>Angular Trivia - Play</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="question-container">
+    <div id="game-container">
+        <div id="timer"></div>
         <h2 id="question-text"></h2>
         <div id="options-container"></div>
-    </div>
-    <div id="waiting-container">
-        <h2>Waiting for the next question...</h2>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

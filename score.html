@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kahoot! Clone - Admin Login</title>
+    <title>Angular Trivia - Score</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Admin Login</h1>
-    <form id="login-form">
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-    </form>
+    <h1>Your Score</h1>
+    <p>Player: <span id="player-name"></span></p>
+    <p>Score: <span id="final-score"></span></p>
+
+    <h2>Ranking</h2>
+    <ol id="ranking-list"></ol>
+
+    <a href="index.html">Play Again</a>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>

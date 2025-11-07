@@ -1,16 +1,8 @@
--- Profiles Table
-CREATE TABLE profiles (
-    id UUID PRIMARY KEY REFERENCES auth.users(id),
-    username TEXT,
-    role TEXT
-);
-
 -- Quizzes Table
 CREATE TABLE quizzes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title TEXT NOT NULL,
-    description TEXT,
-    created_by UUID REFERENCES profiles(id)
+    description TEXT
 );
 
 -- Questions Table
@@ -18,7 +10,7 @@ CREATE TABLE questions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     quiz_id UUID REFERENCES quizzes(id) ON DELETE CASCADE,
     text TEXT NOT NULL,
-    time_limit INTEGER
+    time_limit INTEGER DEFAULT 20 -- Default time limit of 20 seconds
 );
 
 -- Options Table
@@ -29,29 +21,10 @@ CREATE TABLE options (
     is_correct BOOLEAN NOT NULL
 );
 
--- Games Table
-CREATE TABLE games (
+-- Scores Table
+CREATE TABLE scores (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    quiz_id UUID REFERENCES quizzes(id) ON DELETE CASCADE,
-    game_code VARCHAR(6) UNIQUE NOT NULL,
-    status TEXT DEFAULT 'lobby',
-    current_question_id UUID REFERENCES questions(id)
-);
-
--- Players Table
-CREATE TABLE players (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    game_id UUID REFERENCES games(id) ON DELETE CASCADE,
-    nickname TEXT NOT NULL,
-    score INTEGER DEFAULT 0,
-    user_id UUID -- Optional, for Anonymous Auth
-);
-
--- Player Responses Table
-CREATE TABLE player_responses (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    player_id UUID REFERENCES players(id) ON DELETE CASCADE,
-    question_id UUID REFERENCES questions(id) ON DELETE CASCADE,
-    option_id UUID REFERENCES options(id) ON DELETE CASCADE,
-    time_taken INTEGER -- in milliseconds
+    player_name TEXT NOT NULL,
+    score INTEGER NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT now()
 );
