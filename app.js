@@ -2,31 +2,43 @@ const supabaseUrl = 'https://hqbysakupbqwdfyprzya.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxYnlzYWt1cGJxd2RmeXByenlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyOTE0NTMsImV4cCI6MjA3Nzg2NzQ1M30.ctzCo94xOuiVvytAJypPu1tuPVj2iLHZP82LOHsxE3E';
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-const path = window.location.pathname;
-
 // Sound setup
+/*
 const sounds = {
     background: new Howl({ src: ['audio/background.mp3'], loop: true, volume: 0.3 }),
     correct: new Howl({ src: ['audio/correct.mp3'] }),
     incorrect: new Howl({ src: ['audio/incorrect.mp3'] })
 };
+*/
 
-if (path.endsWith('play.html')) {
-    handlePlayPage();
-} else if (path.endsWith('score.html')) {
-    handleScorePage();
-} else if (path.endsWith('index.html') || path === '/') {
-    handleStartPage();
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const path = window.location.pathname;
+
+    if (path.endsWith('play.html')) {
+        handlePlayPage();
+    } else if (path.endsWith('score.html')) {
+        handleScorePage();
+    } else if (path.endsWith('index.html') || path.endsWith('/')) {
+        handleStartPage();
+    }
+});
+
 
 function handleStartPage() {
     const startForm = document.getElementById('start-form');
-    startForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const playerName = document.getElementById('player-name').value;
-        localStorage.setItem('playerName', playerName);
-        window.location.href = 'play.html';
-    });
+    if (startForm) {
+        startForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const playerNameInput = document.getElementById('player-name');
+            const playerName = playerNameInput.value;
+            if (playerName && playerName.trim()) {
+                localStorage.setItem('playerName', playerName);
+                window.location.href = 'play.html';
+            } else {
+                playerNameInput.placeholder = "Please enter a name!";
+            }
+        });
+    }
 }
 
 async function handlePlayPage() {
