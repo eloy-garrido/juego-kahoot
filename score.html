@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Angular Trivia - Score</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 </head>
 <body>
-    <h1>Your Score</h1>
-    <p>Player: <span id="player-name"></span></p>
-    <p>Score: <span id="final-score"></span></p>
+    <div id="score-container">
+        <h1>Your Score</h1>
+        <p>Player: <span id="player-name"></span></p>
+        <p>Score: <span id="final-score"></span></p>
 
-    <h2>Ranking</h2>
+        <h2>Ranking</h2>
     <ol id="ranking-list"></ol>
 
     <a href="index.html">Play Again</a>

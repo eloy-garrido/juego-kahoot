@@ -4,6 +4,13 @@ const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 const path = window.location.pathname;
 
+// Sound setup
+const sounds = {
+    background: new Howl({ src: ['audio/background.mp3'], loop: true, volume: 0.3 }),
+    correct: new Howl({ src: ['audio/correct.mp3'] }),
+    incorrect: new Howl({ src: ['audio/incorrect.mp3'] })
+};
+
 if (path.endsWith('play.html')) {
     handlePlayPage();
 } else if (path.endsWith('score.html')) {
@@ -23,6 +30,7 @@ function handleStartPage() {
 }
 
 async function handlePlayPage() {
+    sounds.background.play();
     const playerName = localStorage.getItem('playerName');
     if (!playerName) {
         window.location.href = 'index.html';
@@ -40,20 +48,12 @@ async function handlePlayPage() {
     let timer;
 
     const fetchQuestions = async () => {
-        console.log("Fetching questions...");
         const { data: quiz, error: quizError } = await supabase.from('quizzes').select('id').eq('title', 'Angular Basics').single();
-        if (quizError) {
-            console.error("Error fetching quiz:", quizError);
-            return;
-        }
+        if (quizError) return;
 
         const { data, error } = await supabase.from('questions').select('*, options(*)').eq('quiz_id', quiz.id);
-        if (error) {
-            console.error("Error fetching questions:", error);
-            return;
-        }
+        if (error) return;
         questions = data;
-        console.log("Questions fetched:", questions);
         showNextQuestion();
     };
 
@@ -86,15 +86,24 @@ async function handlePlayPage() {
                 clearInterval(timer);
                 if (option.is_correct) {
                     score += timeLeft * 10;
+                    button.classList.add('correct');
+                    sounds.correct.play();
+                } else {
+                    button.classList.add('incorrect');
+                    sounds.incorrect.play();
                 }
-                currentQuestionIndex++;
-                showNextQuestion();
+
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    showNextQuestion();
+                }, 1000); // Wait 1 second before showing next question
             };
             optionsContainer.appendChild(button);
         });
     };
 
     const endGame = async () => {
+        sounds.background.stop();
         await supabase.from('scores').insert([{ player_name: playerName, score }]);
         localStorage.setItem('lastScore', score);
         window.location.href = 'score.html';
@@ -104,5 +113,24 @@ async function handlePlayPage() {
 }
 
 async function handleScorePage() {
-    // ... (logic from previous step)
+    const playerName = localStorage.getItem('playerName');
+    const lastScore = localStorage.getItem('lastScore');
+
+    document.getElementById('player-name').textContent = playerName;
+    document.getElementById('final-score').textContent = lastScore;
+
+    const rankingList = document.getElementById('ranking-list');
+    const { data, error } = await supabase
+        .from('scores')
+        .select('*')
+        .order('score', { ascending: false })
+        .limit(10);
+
+    if (error) return;
+
+    data.forEach(entry => {
+        const li = document.createElement('li');
+        li.textContent = `${entry.player_name}: ${entry.score}`;
+        rankingList.appendChild(li);
+    });
 }
